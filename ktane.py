@@ -19,10 +19,21 @@ y = yellow
 star = 'star'
 led = 'led'
 
+hold = 'hold',
+press = 'press',
+detonate = 'detonate',
+det = detonate
+abort = 'abort'
+
 def start():
-    global indicators, serial
+    global indicators, serial, strikes
     indicators = defaultdict(lambda: None)
     serial = None
+    strikes = 0
+
+def strike():
+    global strikes
+    strikes += 1
 
 def askserial():
     global serial
@@ -30,16 +41,25 @@ def askserial():
         serial = input("Serial number> ")
     return serial
 
+def odddigit():
+    return int(askserial()[-1]) % 2
+
+def evendigit():
+    return not odddigit()
+
 def askindicator(i):
     if indicators[i] is None:
         indicators[i] = (input("Indicator {} [y/n]".format(i)) == 'y')
     return indicators[i]
 
+def batteries():
+    if indicators['batteries'] is None:
+        indicators['batteries'] = int(input("# of batteries: "))
+    return indicators['batteries']
+
 def wires(a,b,c,d=None,e=None,f=None):
     def count(color):
         return sum(x == color for x in (a,b,c,d,e,f))
-    def odddigit():
-        return int(askserial()[-1]) % 2
 
 
     if d is None: # 3 wires
@@ -81,7 +101,34 @@ def wires(a,b,c,d=None,e=None,f=None):
         return 4
 
 
+def button(color, label):
+    if color == blue and label == abort:
+        return hold
+    if label == detonate and batteries() > 1:
+        return press
+    if color == white and askindicator('CAR'):
+        return hold
+    if batteries() > 2 and askindicator('FRK'):
+        return press
+    if color == yellow:
+        return hold
+    if color == red and label == hold:
+        return press
+    return hold
 
 
+def complicated(*a):
+    C = lambda: True
+    D = lambda: False
+    S = evendigit
+    P = lambda: askindicator("Parallel Port")
+    B = lambda: batteries() >= 2
+
+    index = (red in a) + 2*(blue in a) + 4*(star in a) + 8*(led in a)
+
+    table = [ C, S, S, S, C, C, D, P, D, B, P, S, B, B, P, D]
+
+    return table[index]()
+        
 
 start()
