@@ -8,7 +8,7 @@ blue = 'blue'
 b = blue
 
 black = 'black'
-bl = black
+k = black
 
 white = 'white'
 w = white
@@ -19,9 +19,9 @@ y = yellow
 star = 'star'
 led = 'led'
 
-hold = 'hold',
-press = 'press',
-detonate = 'detonate',
+hold = 'hold'
+press = 'press'
+detonate = 'detonate'
 det = detonate
 abort = 'abort'
 
@@ -130,5 +130,30 @@ def complicated(*a):
 
     return table[index]()
         
+
+def password():
+    words = ["about", "after", "again", "below", "could",
+             "every", "first", "found", "great", "house",
+             "large", "learn", "never", "other", "place",
+             "plant", "point", "right", "small", "sound",
+             "spell", "still", "study", "their", "there",
+             "these", "thing", "think", "three", "water",
+             "where", "which", "world", "would", "write" ]
+
+    columns = []
+
+    def acceptable(word):
+        return all(l in c for (l,c) in zip(word, columns))
+
+    while True:
+        columns.append(input("Column {}: ".format(len(columns) + 1)))
+
+        ws = list(filter(acceptable, words))
+        if len(ws) < 2:
+            return ws
+
+        print(ws)
+
+
 
 start()
