@@ -25,7 +25,7 @@ detonate = 'detonate'
 det = detonate
 abort = 'abort'
 
-def start():
+def reset():
     global indicators, serial, strikes
     indicators = defaultdict(lambda: None)
     serial = None
@@ -117,7 +117,7 @@ def button(color, label):
     return hold
 
 
-def complicated(*a):
+def cwire(*a):
     C = lambda: True
     D = lambda: False
     S = evendigit
@@ -156,4 +156,4 @@ def password():
 
 
 
-start()
+reset()
