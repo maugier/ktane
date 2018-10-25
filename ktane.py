@@ -102,6 +102,16 @@ def wires(a,b,c,d=None,e=None,f=None):
 
 
 def button(color, label):
+    colors = (blue,red,yellow,white)
+    labels = (hold, press, abort, detonate)
+
+    if label in colors:
+        (color,label) = (label,color)
+
+    if color not in colors or label not in labels:
+        raise Exception("button must have a color and a label")
+
+
     if color == blue and label == abort:
         return hold
     if label == detonate and batteries() > 1:
